@@ -10,6 +10,7 @@ import { ReactComponent as DayCloudyIcon } from "./images/day-cloudy.svg";
 import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
 import { ReactComponent as RainIcon } from "./images/rain.svg";
 import { ReactComponent as RefreshIcon } from "./images/refresh.svg";
+import { ReactComponent as LoadingIcon } from './images/loading.svg';
 
 
 //定義主題
@@ -123,11 +124,16 @@ font-size: 12px;
 display: inline-flex;
 align-items: flex-end;
 color: ${({ theme }) => theme.textColor};
+@keyframes rotate { 
+  from { transform: rotate(360deg); } 
+  to { transform: rotate(0deg); } }
 svg {
   margin-left: 10px;
   width: 15px;
   height: 15px;
   cursor: pointer;
+  animation: rotate infinite 1.5s linear;
+  animation-duration: ${({ isLoading }) => (isLoading ? '1.5s' : '0s')};
 }
 `;
 
@@ -135,6 +141,7 @@ const AUTH = "CWB-86B7E04A-22F9-41AF-BD59-CE75D9E5658F";
 const LOCATION_NAME = '臺北';
 
 function App() {
+  
   const [currentTheme, setCurrentTheme] = useState('light');
   const [currentWeather, setCurrentWeather] = useState(
     {
@@ -144,12 +151,19 @@ function App() {
       temperature: 22.9,
       rainPossibility: 48.3,
       observationTime: '2020-12-12 22:10:00',
+      isLoading: true
     }
 
   );
   const [isClicked, setIsClick] = useState(false);
 
   const fetchCurrentWeather = () => {
+    //取得前一次的資料狀態
+    setCurrentWeather((prevState) => ({
+      ...prevState,
+      isLoading: true,
+    }));
+    //每次 setSomething 時都是 用新的資料覆蓋舊的」，所以這裡如果直接用： setCurrentWeather({ isLoading: true }); 那麼 整個 currentWeather 的 資料 狀態 都會 被 覆蓋 掉， 變成 只剩 下 { isLoading: true }。
     fetch(`http://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTH}&locationName=${LOCATION_NAME}`)
       .then((response) => response.json())
       .then((data) => {
@@ -162,13 +176,15 @@ function App() {
         const weatherElements = locationData.weatherElement.reduce(reducer, {});
 
         // STEP 3： 更新 React 元件中的資料狀態 
-        setCurrentWeather({ 
-          observationTime: locationData.time.obsTime, 
-          locationName: locationData.locationName, 
-          temperature: weatherElements.TEMP, 
-          windSpeed: weatherElements.WDSD, 
-          description: ' 多雲時晴 ', 
-          rainPossibility: 60, });
+        setCurrentWeather({
+          observationTime: locationData.time.obsTime,
+          locationName: locationData.locationName,
+          temperature: weatherElements.TEMP,
+          windSpeed: weatherElements.WDSD,
+          description: ' 多雲時晴 ',
+          rainPossibility: 60,
+          isLoading: false
+        });
       })
 
   }
@@ -178,29 +194,34 @@ function App() {
     setCurrentTheme(isClicked === false ? 'light' : 'dark');
   }, [isClicked]);
 
+  //解構賦值
+  const { observationTime, locationName, description, 
+    windSpeed, temperature, rainPossibility, isLoading, } = currentWeather;
+
   return (
 
     //把所有會用到主題配色的部分都包在 ThemeProvider 內， 並透過 theme 這個 props 傳入深色主題
     <ThemeProvider theme={theme[currentTheme]} >
       <Container >
         <WeatherCard onClick={() => setIsClick(!isClicked)}>
-          <Location>{currentWeather.locationName}</Location>
-          <Description>{currentWeather.description}</Description>
+          <Location>{locationName}</Location>
+          <Description>{description}</Description>
           <CurrentWeather>
             <Temperature>
-              {Math.round(currentWeather.temperature)}  <Celsius>°C</Celsius>
+              {Math.round(temperature)}  <Celsius>°C</Celsius>
             </Temperature>
             <DayCloudy />
           </CurrentWeather>
           <AirFlow>
-            <AirFlowIcon /> {currentWeather.windSpeed}  m/h
+            <AirFlowIcon /> {windSpeed}  m/h
           </AirFlow>
           <Rain>
-            <RainIcon /> {currentWeather.rainPossibility} %
+            <RainIcon /> {rainPossibility} %
           </Rain>
-          <Refresh onClick={fetchCurrentWeather}>
+          {/** isLoading 資料狀態透過 props 帶入 <Refresh> 這個 styled components */}
+          <Refresh onClick={fetchCurrentWeather} isLoading={isLoading}>
             {/* JSX 中預設的空格最後在網頁 呈現時都會被過濾掉，因此如果你希望最後在頁面上元件與元件間是留有 空格的，就可以透過帶入「空字串」的方式來加入空格 */}
-            最後觀測時間：{new Intl.DateTimeFormat('zh-TW', { hour: 'numeric', minute: 'numeric', }).format(dayjs(currentWeather.observationTime))} {' '} <RefreshIcon />
+            最後觀測時間：{new Intl.DateTimeFormat('zh-TW', { hour: 'numeric', minute: 'numeric', }).format(dayjs(observationTime))} {' '} {isLoading ? <LoadingIcon /> : <RefreshIcon />}
           </Refresh>
         </WeatherCard>
       </Container>
