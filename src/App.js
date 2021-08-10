@@ -163,12 +163,13 @@ function App() {
     //取得前一次的資料狀態
     setWeatherElement((prevState) => ({
       ...prevState,
-      
+
       isLoading: true,
-      
+
     }));
     //每次 setSomething 時都是 用新的資料覆蓋舊的」，所以這裡如果直接用： setCurrentWeather({ isLoading: true }); 那麼 整個 currentWeather 的 資料 狀態 都會 被 覆蓋 掉， 變成 只剩 下 { isLoading: true }。
-    fetch(
+    //在此加上return 直接把fetch API回傳的值回傳回去
+    return fetch(
       `http://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${AUTH}&locationName=${LOCATION_NAME}`
     )
       .then((response) => response.json())
@@ -186,9 +187,8 @@ function App() {
         };
         const weatherElements = locationData.weatherElement.reduce(reducer, {});
 
-        // STEP 3： 更新 React 元件中的資料狀態
-        setWeatherElement((prevState)=>({
-          ...prevState,
+        //最後把取得的資料回傳回去
+        return {
           observationTime: locationData.time.obsTime,
           locationName: locationData.locationName,
           temperature: weatherElements.TEMP,
@@ -196,8 +196,8 @@ function App() {
           //description: " 多雲時晴 ",
           //rainPossibility: 60,
           isLoading: false,
+        }
 
-        }));
       });
   };
 
@@ -207,9 +207,9 @@ function App() {
     setWeatherElement((prevState) => ({
       ...prevState,
       isLoading: true,
-      
+
     }));
-    fetch(
+    return fetch(
       `http://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${AUTH}&locationName=${LOCATION_NAME_FORECAST}`
     )
       .then((response) => response.json())
@@ -227,13 +227,14 @@ function App() {
           return neededElements;
         }, {});
 
-        setWeatherElement((prevState) => ({
-          ...prevState,
+        return {
           description: weatherElements.Wx.parameterName,
           weatherCode: weatherElements.Wx.parameterValue,
           rainPossibility: weatherElements.PoP.parameterName,
           comfortability: weatherElements.CI.parameterName,
-        }));
+        }
+
+
 
       });
 
@@ -246,11 +247,30 @@ function App() {
 
 
   useEffect(() => {
-    fetchCurrentWeather();
-    fetchWeatherForecast();
+  //在useEffect 中定義async function 取名為fetchData
+
+    //拉取之前給予loading狀態
+    setWeatherElement((prevState)=> ({
+      ...prevState,
+      isLoading:true,
+    }));
+    const fetchData = async () => {
+      const data = await Promise.all([fetchCurrentWeather(),fetchWeatherForecast()])
+      // console.log(data)
+      const [currentWeather,weatherForecast]=data;
+      
+      // 放入取得的資料，透過物件的解構賦值
+      setWeatherElement({
+        ...currentWeather,
+        ...weatherForecast,
+        isLoading:false,
+      })
+    
+    };
+    fetchData();
     setCurrentTheme(isClicked === false ? "light" : "dark");
 
-  }, [isClicked]);
+    }, [isClicked]);
 
   //解構賦值
   const {
@@ -284,9 +304,10 @@ function App() {
             <RainIcon /> {rainPossibility} %
           </Rain>
           {/** isLoading 資料狀態透過 props 帶入 <Refresh> 這個 styled components */}
-          <Refresh onClick={()=>{
+          <Refresh onClick={() => {
             fetchCurrentWeather();
-            fetchWeatherForecast();}} isLoading={isLoading}>
+            fetchWeatherForecast();
+          }} isLoading={isLoading}>
             {/* JSX 中預設的空格最後在網頁 呈現時都會被過濾掉，因此如果你希望最後在頁面上元件與元件間是留有 空格的，就可以透過帶入「空字串」的方式來加入空格 */}
             最後觀測時間：
             {new Intl.DateTimeFormat("zh-TW", {
