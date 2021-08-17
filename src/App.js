@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 //import './App.css';
 //1.引入
 import styled from "@emotion/styled";
@@ -240,37 +240,33 @@ function App() {
 
 
   }
+//將共用的函式拉到外面
+  const fetchData = useCallback(async () => {
+    //拉取之前給予loading狀態
+    setWeatherElement((prevState) => ({
+      ...prevState,
+      isLoading: true,
+    }));
+    const data = await Promise.all([fetchCurrentWeather(), fetchWeatherForecast()])
+    // console.log(data)
+    const [currentWeather, weatherForecast] = data;
 
-
+    // 放入取得的資料，透過物件的解構賦值
+    setWeatherElement({
+      ...currentWeather,
+      ...weatherForecast,
+      isLoading: false,
+    })
+  }, [])
 
 
 
 
   useEffect(() => {
-  //在useEffect 中定義async function 取名為fetchData
-
-    //拉取之前給予loading狀態
-    setWeatherElement((prevState)=> ({
-      ...prevState,
-      isLoading:true,
-    }));
-    const fetchData = async () => {
-      const data = await Promise.all([fetchCurrentWeather(),fetchWeatherForecast()])
-      // console.log(data)
-      const [currentWeather,weatherForecast]=data;
-      
-      // 放入取得的資料，透過物件的解構賦值
-      setWeatherElement({
-        ...currentWeather,
-        ...weatherForecast,
-        isLoading:false,
-      })
-    
-    };
     fetchData();
     setCurrentTheme(isClicked === false ? "light" : "dark");
 
-    }, [isClicked]);
+  }, [fetchData, isClicked]);
 
   //解構賦值
   const {
@@ -304,10 +300,7 @@ function App() {
             <RainIcon /> {rainPossibility} %
           </Rain>
           {/** isLoading 資料狀態透過 props 帶入 <Refresh> 這個 styled components */}
-          <Refresh onClick={() => {
-            fetchCurrentWeather();
-            fetchWeatherForecast();
-          }} isLoading={isLoading}>
+          <Refresh onClick={fetchData} isLoading={isLoading}>
             {/* JSX 中預設的空格最後在網頁 呈現時都會被過濾掉，因此如果你希望最後在頁面上元件與元件間是留有 空格的，就可以透過帶入「空字串」的方式來加入空格 */}
             最後觀測時間：
             {new Intl.DateTimeFormat("zh-TW", {
