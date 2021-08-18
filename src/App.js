@@ -6,7 +6,8 @@ import { ThemeProvider } from "@emotion/react";
 import dayjs from "dayjs";
 
 // 載入圖示
-import { ReactComponent as DayCloudyIcon } from "./images/day-cloudy.svg";
+//import { ReactComponent as DayCloudyIcon } from "./images/day-cloudy.svg";
+import WeatherIcon from './components/WeatherIcon'
 import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
 import { ReactComponent as RainIcon } from "./images/rain.svg";
 import { ReactComponent as RefreshIcon } from "./images/refresh.svg";
@@ -108,9 +109,9 @@ const Rain = styled.div`
   }
 `;
 
-const DayCloudy = styled(DayCloudyIcon)`
-  flex-basis: 30%;
-`;
+// const DayCloudy = styled(DayCloudyIcon)`
+//   flex-basis: 30%;
+// `;
 
 const Refresh = styled.div`
   position: absolute;
@@ -270,6 +271,7 @@ function App() {
 
   //解構賦值
   const {
+    weatherCode,
     observationTime,
     locationName,
     description,
@@ -291,7 +293,8 @@ function App() {
             <Temperature>
               {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
-            <DayCloudy />
+            {/*<DayCloudy />*/}
+            <WeatherIcon weatherCode={weatherCode} moment="night"/>
           </CurrentWeather>
           <AirFlow>
             <AirFlowIcon /> {windSpeed} m/h
