@@ -1,4 +1,5 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useMemo } from "react";
+import { getMoment } from "./utils/helpers";
 //import './App.css';
 //1.引入
 import styled from "@emotion/styled";
@@ -261,13 +262,14 @@ function App() {
   }, [])
 
 
-
+ const moment = useMemo(()=>getMoment(LOCATION_NAME_FORECAST),[])
 
   useEffect(() => {
     fetchData();
-    setCurrentTheme(isClicked === false ? "light" : "dark");
+    //setCurrentTheme(isClicked === false ? "light" : "dark");
+    setCurrentTheme(moment === 'day' ? "light" : "dark");
 
-  }, [fetchData, isClicked]);
+  }, [fetchData,moment]);
 
   //解構賦值
   const {
@@ -294,7 +296,7 @@ function App() {
               {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
             {/*<DayCloudy />*/}
-            <WeatherIcon weatherCode={weatherCode} moment="night"/>
+            <WeatherIcon weatherCode={weatherCode} moment={moment}/>
           </CurrentWeather>
           <AirFlow>
             <AirFlowIcon /> {windSpeed} m/h
