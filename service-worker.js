@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/learn-react-from-hook-realtime-weather-app-init-project/precache-manifest.88802ed15ff06ccb8dbdeca8828aea09.js"
+  "/learn-react-from-hook-realtime-weather-app-init-project/precache-manifest.d491465aea6bbfff227f5e026c3d9afe.js"
 );
 
 self.addEventListener('message', (event) => {

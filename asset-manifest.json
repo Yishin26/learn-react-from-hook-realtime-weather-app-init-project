@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/learn-react-from-hook-realtime-weather-app-init-project/static/css/main.88c64273.chunk.css",
-    "main.js": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/main.38bdfdae.chunk.js",
-    "main.js.map": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/main.38bdfdae.chunk.js.map",
+    "main.js": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/main.e19419dd.chunk.js",
+    "main.js.map": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/main.e19419dd.chunk.js.map",
     "runtime-main.js": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/runtime-main.d7fef006.js",
     "runtime-main.js.map": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/runtime-main.d7fef006.js.map",
     "static/css/2.764ccc25.chunk.css": "/learn-react-from-hook-realtime-weather-app-init-project/static/css/2.764ccc25.chunk.css",
     "static/js/2.7934bd74.chunk.js": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/2.7934bd74.chunk.js",
     "static/js/2.7934bd74.chunk.js.map": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/2.7934bd74.chunk.js.map",
     "index.html": "/learn-react-from-hook-realtime-weather-app-init-project/index.html",
-    "precache-manifest.88802ed15ff06ccb8dbdeca8828aea09.js": "/learn-react-from-hook-realtime-weather-app-init-project/precache-manifest.88802ed15ff06ccb8dbdeca8828aea09.js",
+    "precache-manifest.d491465aea6bbfff227f5e026c3d9afe.js": "/learn-react-from-hook-realtime-weather-app-init-project/precache-manifest.d491465aea6bbfff227f5e026c3d9afe.js",
     "service-worker.js": "/learn-react-from-hook-realtime-weather-app-init-project/service-worker.js",
     "static/css/2.764ccc25.chunk.css.map": "/learn-react-from-hook-realtime-weather-app-init-project/static/css/2.764ccc25.chunk.css.map",
     "static/css/main.88c64273.chunk.css.map": "/learn-react-from-hook-realtime-weather-app-init-project/static/css/main.88c64273.chunk.css.map",
@@ -39,6 +39,6 @@
     "static/css/2.764ccc25.chunk.css",
     "static/js/2.7934bd74.chunk.js",
     "static/css/main.88c64273.chunk.css",
-    "static/js/main.38bdfdae.chunk.js"
+    "static/js/main.e19419dd.chunk.js"
   ]
 }
