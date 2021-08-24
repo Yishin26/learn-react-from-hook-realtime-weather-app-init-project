@@ -11,7 +11,7 @@ const fetchCurrentWeather = ({ locationName, authorizationkey }) => {
     //每次 setSomething 時都是 用新的資料覆蓋舊的」，所以這裡如果直接用： setCurrentWeather({ isLoading: true }); 那麼 整個 currentWeather 的 資料 狀態 都會 被 覆蓋 掉， 變成 只剩 下 { isLoading: true }。
     //在此加上return 直接把fetch API回傳的值回傳回去
     return fetch(
-        `http://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${authorizationkey}&locationName=${locationName}`
+        `https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${authorizationkey}&locationName=${locationName}`
     )
         .then((response) => response.json())
         .then((data) => {
@@ -51,7 +51,7 @@ const fetchWeatherForecast = ({ cityName, authorizationkey }) => {
 
     // }));
     return fetch(
-        `http://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${authorizationkey}&locationName=${cityName}`
+        `https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=${authorizationkey}&locationName=${cityName}`
     )
         .then((response) => response.json())
         .then((data) => {
