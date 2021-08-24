@@ -9,6 +9,7 @@ import { ReactComponent as AirFlowIcon } from "../images/airFlow.svg";
 import { ReactComponent as RainIcon } from "../images/rain.svg";
 import { ReactComponent as RefreshIcon } from "../images/refresh.svg";
 import { ReactComponent as LoadingIcon } from "../images/loading.svg";
+import { ReactComponent as CogIcon } from "../images/cog.svg"
 
 const WeatherCardWrapper = styled.div`
   position: relative;
@@ -107,50 +108,58 @@ const Refresh = styled.div`
   }
 `;
 
+const Cog = styled(CogIcon)`
+  position:absolute;
+  top:30px;
+  right:-30px;
+  height:15px;
+  cursor:pointer;
+`;
 
-const WeatherCard = ({ weatherElement, moment, fetchData,setIsClick,isClicked }) => {
-  
-    //解構賦值
-    const {
-        weatherCode,
-        observationTime,
-        locationName,
-        description,
-        comfortability,
-        windSpeed,
-        temperature,
-        rainPossibility,
-        isLoading,
-    } = weatherElement;
+const WeatherCard = ({ cityName, weatherElement, moment, fetchData, setIsClick, isClicked, handleCurrentPageChange }) => {
+
+  //解構賦值
+  const {
+    weatherCode,
+    observationTime,
+ //locationName,
+    description,
+    comfortability,
+    windSpeed,
+    temperature,
+    rainPossibility,
+    isLoading,
+  } = weatherElement;
 
 
-    return (<WeatherCardWrapper onClick={() => setIsClick(!isClicked)}>
-        <Location>{locationName}</Location>
-        <Description>{description} - {comfortability}</Description>
-        <CurrentWeather>
-            <Temperature>
-                {Math.round(temperature)} <Celsius>°C</Celsius>
-            </Temperature>
-            {/*<DayCloudy />*/}
-            <WeatherIcon weatherCode={weatherCode} moment={moment} />
-        </CurrentWeather>
-        <AirFlow>
-            <AirFlowIcon /> {windSpeed} m/h
-        </AirFlow>
-        <Rain>
-            <RainIcon /> {rainPossibility} %
-        </Rain>
-        {/** isLoading 資料狀態透過 props 帶入 <Refresh> 這個 styled components */}
-        <Refresh onClick={fetchData} isLoading={isLoading}>
-            {/* JSX 中預設的空格最後在網頁 呈現時都會被過濾掉，因此如果你希望最後在頁面上元件與元件間是留有 空格的，就可以透過帶入「空字串」的方式來加入空格 */}
-            最後觀測時間：
-            {new Intl.DateTimeFormat("zh-TW", {
-                hour: "numeric",
-                minute: "numeric",
-            }).format(dayjs(observationTime))}{" "}
-            {isLoading ? <LoadingIcon /> : <RefreshIcon />}
-        </Refresh>
-    </WeatherCardWrapper>);
+  return (<WeatherCardWrapper onClick={() => setIsClick(!isClicked)}>
+    <Cog onClick={() => handleCurrentPageChange('WeatherSetting')} />
+    <Location>{cityName}</Location>
+    <Description>{description} - {comfortability}</Description>
+    <CurrentWeather>
+      <Temperature>
+        {Math.round(temperature)} <Celsius>°C</Celsius>
+      </Temperature>
+      {/*<DayCloudy />*/}
+      <WeatherIcon weatherCode={weatherCode} moment={moment} />
+    </CurrentWeather>
+    <AirFlow>
+      <AirFlowIcon /> {windSpeed} m/h
+    </AirFlow>
+    <Rain>
+      <RainIcon /> {rainPossibility} %
+    </Rain>
+    {/** isLoading 資料狀態透過 props 帶入 <Refresh> 這個 styled components */}
+    <Refresh onClick={fetchData} isLoading={isLoading}>
+      {/* JSX 中預設的空格最後在網頁 呈現時都會被過濾掉，因此如果你希望最後在頁面上元件與元件間是留有 空格的，就可以透過帶入「空字串」的方式來加入空格 */}
+      最後觀測時間：
+      {new Intl.DateTimeFormat("zh-TW", {
+        hour: "numeric",
+        minute: "numeric",
+      }).format(dayjs(observationTime))}{" "}
+      {isLoading ? <LoadingIcon /> : <RefreshIcon />}
+    </Refresh>
+  </WeatherCardWrapper>);
 
 }
 

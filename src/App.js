@@ -1,10 +1,11 @@
 import React, { useCallback, useState, useEffect, useMemo } from "react";
-import { getMoment } from "./utils/helpers";
+import { getMoment,findLocation } from "./utils/helpers";
 //import './App.css';
 //1.引入
 import styled from "@emotion/styled";
 import { ThemeProvider } from "@emotion/react";
 import WeatherCard from "./views/WeatherCard";
+import WeatherSetting from "./views/WeatherSetting";
 import useWeatherAPI from "./hooks/useWeatherAPI";
 
 
@@ -48,11 +49,22 @@ const LOCATION_NAME_FORECAST = "臺北市";
 
 function App() {
  
+ const [currentPage, setCurrentPage]=useState('WeatherCard')
+  const handleCurrentPageChange=(currentPage)=>{
+    setCurrentPage(currentPage)
+  }
 
-  
+  const [currentCity,setCurrentCity]=useState(localStorage.getItem('cityName')||'臺北市')
+  const handleCurrentCityChange=(currentCity)=>{
+    setCurrentCity(currentCity)
+  }
+  const currentLocation=useMemo(()=>findLocation(currentCity),[currentCity])
+
+  const {cityName,locationName,sunriseCityName}=currentLocation
+
   const [weatherElement,fetchData]=useWeatherAPI({
-    locationName:LOCATION_NAME,
-    cityName:LOCATION_NAME_FORECAST,
+    locationName,
+    cityName,
     authorizationkey:AUTH
   }
     
@@ -61,7 +73,9 @@ function App() {
   const [isClicked, setIsClick] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('light');
 
-  const moment = useMemo(() => getMoment(LOCATION_NAME_FORECAST), []);
+
+
+  const moment = useMemo(() => getMoment(sunriseCityName), [sunriseCityName]);
 
   useEffect(() => {
     setCurrentTheme(moment === 'day'||isClicked===true ? 'light' : 'dark');
@@ -72,7 +86,9 @@ function App() {
     //把所有會用到主題配色的部分都包在 ThemeProvider 內， 並透過 theme 這個 props 傳入深色主題
     <ThemeProvider theme={theme[currentTheme]}>
       <Container>
-        <WeatherCard weatherElement={weatherElement} moment={moment} fetchData={fetchData} isClicked={isClicked} setIsClick={setIsClick}/>
+        {currentPage==='WeatherCard'&&
+        (<WeatherCard cityName={cityName} weatherElement={weatherElement} moment={moment} fetchData={fetchData} handleCurrentPageChange={handleCurrentPageChange} isClicked={isClicked} setIsClick={setIsClick}/>)}
+        {currentPage==='WeatherSetting'&&<WeatherSetting cityName={cityName} handleCurrentPageChange={handleCurrentPageChange} handleCurrentCityChange={handleCurrentCityChange}/>}
       </Container>
     </ThemeProvider>
   );
