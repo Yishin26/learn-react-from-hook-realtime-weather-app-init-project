@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "49be0d9186c590546abdbc32ce15b82d",
+    "revision": "72c33564a22912343673ddb670a23ae8",
     "url": "/learn-react-from-hook-realtime-weather-app-init-project/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/learn-react-from-hook-realtime-weather-app-init-project/static/css/2.764ccc25.chunk.css"
   },
   {
-    "revision": "77f5b185371cc3d30aeb",
+    "revision": "c5eadf0bf8d97ab7485b",
     "url": "/learn-react-from-hook-realtime-weather-app-init-project/static/css/main.88c64273.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/2.7934bd74.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "77f5b185371cc3d30aeb",
-    "url": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/main.e19419dd.chunk.js"
+    "revision": "c5eadf0bf8d97ab7485b",
+    "url": "/learn-react-from-hook-realtime-weather-app-init-project/static/js/main.17fd3ea8.chunk.js"
   },
   {
     "revision": "f46c13ef4333dfbf738a",
